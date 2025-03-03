@@ -1,6 +1,6 @@
 {
-  "name": "Export to JPG",
-  "short_name": "ExportJPG",
+  "name": "MTZ Profile",
+  "short_name": "MtzProfile",
   "description": "A simple app to create and export text as JPG",
   "start_url": "/index.html",
   "display": "standalone",
