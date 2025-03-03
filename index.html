@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- iOS-specific meta tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MTZ PROFILE">
+  <link rel="apple-touch-icon" href="icon-192x192.png"> <!-- Add a 192x192 PNG icon -->
+  
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <title>MTZ PROFILE </title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+    }
+   
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 400px; /* Adjust as needed */
+      margin: 10px;
+    }
+
+    .input-button-row {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 20px;
+     
+    }
+
+    #input-field {
+      width:50px;
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 24px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    #text-size-input {
+     width:30px;
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 24px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 24px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .color-list li:hover {
+      transform: scale(1.2);
+    }
+
+    .color-list li.active {
+      transform: scale(1.5);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #container {
+      width: 350px;
+      height: 350px;
+      border: 1px solid black;
+      text-align: center;
+      font-size: 124px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000b74;
+      color: #000;
+    }
+
+    .color-list {
+      margin-left:-40px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap; /* Allow wrapping for smaller screens */
+     
+    }
+
+    .color-list li {
+      list-style: none;
+      margin: 5px;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+      cursor: pointer;
+      border:1px solid #ccc;
+    }
+
+    .text-color-list {
+      margin-left:-40px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap; /* Allow wrapping for smaller screens */
+     
+    }
+
+    .text-color-list li {
+      list-style: none;
+      margin: 5px;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+      cursor: pointer;
+       border:1px solid #ccc;
+    }
+
+    .text-size-input {
+      width: 50px;
+      padding: 10px;
+      font-size: 24px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Your existing HTML structure remains unchanged -->
+    <div class="input-button-row" style="padding:10px;">
+      <textarea id="input-field" type="text" placeholder="Type here..."></textarea>
+    </div>
+    <div class="input-button-row" style="padding:10px;margin-top:-20px;">
+      <input id="text-size-input" type="number" value="124" min="1" max="500">
+      <button onclick="exportToJPG()">EXPORT</button>
+    </div>
+    <ul class="text-color-list" style="margin-top:-15px;margin-left:35px;">
+      <span style="margin-top:11px; font-weight:bold;"> TEXT :</span>
+      <li style="background-color: #000b74" data-color="#000b74"></li>
+      <li style="background-color: #b70110" data-color="#b70110"></li>
+      <li style="background-color: #fff" data-color="#fff"></li>
+      <li style="background-color: #000" data-color="#000"></li>
+    </ul>
+    <ul class="color-list" style="margin-top:-15px;">
+      <span style="margin-top:11px; font-weight:bold;"> BACKGROUND :</span>
+      <li style="background-color: #000b74" data-color="#000b74"></li>
+      <li style="background-color: #b70110" data-color="#b70110"></li>
+      <li style="background-color: #FFF" data-color="#FFF"></li>
+      <li style="background-color: #000" data-color="#000"></li>
+    </ul>
+    <div id="container">
+      <span id="text"></span>
+    </div>
+  </div>
+
+  <script>
+    // Your existing JavaScript remains unchanged
+    const inputField = document.getElementById("input-field");
+    const textSizeInput = document.getElementById("text-size-input");
+    const textElement = document.getElementById("text");
+    const container = document.getElementById("container");
+    const colorList = document.querySelectorAll(".color-list li");
+    const textColorList = document.querySelectorAll(".text-color-list li");
+
+    inputField.addEventListener("input", function() {
+      const formattedText = inputField.value.replace(/\n/g, '<br>');
+      textElement.innerHTML = formattedText;
+    });
+
+    textSizeInput.addEventListener("input", function() {
+      textElement.style.fontSize = textSizeInput.value + "px";
+    });
+
+    colorList.forEach(function(color) {
+      color.addEventListener("click", function() {
+        container.style.backgroundColor = this.dataset.color;
+        colorList.forEach(function(c) { c.classList.remove("active"); });
+        this.classList.add("active");
+      });
+    });
+
+    textColorList.forEach(function(color) {
+      color.addEventListener("click", function() {
+        textElement.style.color = this.dataset.color;
+        textColorList.forEach(function(c) { c.classList.remove("active"); });
+        this.classList.add("active");
+      });
+    });
+
+    function exportToJPG() {
+      html2canvas(container).then(function(canvas) {
+        const imgData = canvas.toDataURL('image/jpeg');
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = textElement.textContent + '.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    }
+
+    // Register the service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch(error => {
+            console.error('Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
